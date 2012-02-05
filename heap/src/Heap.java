@@ -1,5 +1,12 @@
 import java.util.*;
 
+/*
+ * An implementation of a Max Heap
+ * Aside from serving as a heap
+ * This implementation can also has the methods required for a priority queue
+ * and can sort values via heapsort.
+ */
+
 public class Heap<T> {
 	
 	private ArrayList<T> array;
@@ -12,7 +19,7 @@ public class Heap<T> {
 		array = initialArray;
 		comparator = comp;
 		HeapSize = array.size() - 1;
-		childNodeLimit = 5;
+		childNodeLimit = childLimit;
 		System.out.print("Received Array: ");
 		PrintHeap();
 		HeapifyArray();
@@ -24,22 +31,24 @@ public class Heap<T> {
 			System.out.print(" " + x + " ");
 		System.out.println();
 	}
-	
-	private void HeapifyArray()
+
+/*
+ * Heap Methods
+ */
+	public void HeapifyArray()
 	{
+		HeapSize = array.size() - 1;
 		for(int i = HeapSize / 2; i > -1; i--)
 		{
-			//System.out.println(i);
 			MaxHeapify(i);
 		}
 	}
 	
 	private void MaxHeapify(int index)
 	{
-		//int left = LeftChildIndex(index);
-		//int right = RightChildIndex(index);
 		int largest = index;
 		int[] ChildNodes = ChildrenNodes(index);
+		
 		for(int x : ChildNodes)
 		{
 			if ( x <= HeapSize && (comparator.compare(array.get(x), array.get(largest)) > 0))
@@ -47,21 +56,7 @@ public class Heap<T> {
 				largest = x;
 			}
 		}
-		
-		/* 
-		if (left <= HeapSize && (comparator.compare(array.get(left), array.get(largest)) > 0))
-		{
-			//System.out.println(" largest " + largest + " index " + index + " left " + left + " right " + right + " heap size " + HeapSize);
-			largest = left;
-		}
-		
-		//System.out.println(" largest " + largest + " index " + index + " right " + right + " heap size " + HeapSize);
-		if (right <= HeapSize && (comparator.compare(array.get(right), array.get(largest)) > 0))
-		{
-			largest = right;
-		}
-		*/
-		//System.out.println(" largest " + largest + " index " + index);
+
 		if (largest != index)
 		{
 			Swap(index, largest);
@@ -69,6 +64,35 @@ public class Heap<T> {
 		}
 	}
 	
+	public void HeapSort()
+	{
+		HeapSize = array.size() - 1;
+		for (int i = array.size() - 1; i > 0; i--)
+		{
+			Swap(0, i);
+			HeapSize--;
+			MaxHeapify(0);
+		}
+	}
+	
+	private int ParentIndex(int nodeIndex)
+	{
+		return (nodeIndex + childNodeLimit - 3) / childNodeLimit;
+	}
+	
+	private int[] ChildrenNodes(int nodeIndex)
+	{
+		int[] temp = new int[childNodeLimit];
+		for (int i = 0; i < childNodeLimit; i++)
+		{
+			temp[i] = (childNodeLimit * nodeIndex) + 1 + i;
+		}
+		return temp;
+	}
+
+/*
+ * Priority Queue methods
+ */
 	public T Maximum()
 	{
 		return array.get(0);
@@ -105,6 +129,7 @@ public class Heap<T> {
 	
 	public void Insert(T key) throws Exception
 	{
+		HeapSize = array.size() - 1;
 		HeapSize++;
 		array.add(null);
 		IncreaseKey(key);
@@ -115,30 +140,5 @@ public class Heap<T> {
 		T temp = array.get(to);
 		array.set(to, array.get(from));
 		array.set(from, temp);
-	}
-	
-	private int ParentIndex(int nodeIndex)
-	{
-		return (nodeIndex + childNodeLimit - 3) / childNodeLimit;
-	}
-	
-	private int[] ChildrenNodes(int nodeIndex)
-	{
-		int[] temp = new int[childNodeLimit];
-		for (int i = 0; i < childNodeLimit; i++)
-		{
-			temp[i] = (childNodeLimit * nodeIndex) + 1 + i;
-		}
-		return temp;
-	}
-	
-	private int RightChildIndex(int nodeIndex)
-	{
-		return 2 * nodeIndex + 2;
-	}
-
-	private int LeftChildIndex(int nodeIndex)
-	{
-		return 2 * nodeIndex + 1;
 	}
 }
