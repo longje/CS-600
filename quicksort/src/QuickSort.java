@@ -19,7 +19,7 @@ public class QuickSort<T> {
 		{
 			System.out.print(" P Value: " + p + " R Value: " + r);
 			int q = Partition(p, r);
-			System.out.println(" Q Value: " + q);
+			System.out.println(" Q Value: " + q + " Pivot Value: " + array[q]);
 			PrintArray();
 			QuickSortArray(p, q - 1);
 			QuickSortArray(q + 1, r);
