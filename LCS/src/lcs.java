@@ -6,6 +6,55 @@ public class lcs {
 	private static char[] xholder;
 	private static char[] yholder;
 	
+	public static String lcsRecursive(char[] x, char[] y, int i, int j, String sub)
+	{
+        if (i < 0 || j < 0)
+            return sub + "";
+        
+        if (i >= 0 && j >= 0 && x[i] == y[j])
+        	return lcsRecursive(x, y, i-1, j-1, x[i] + sub);
+        else
+        {
+        	String j1 = lcsRecursive(x, y, i, j-1, sub);
+        	String i1 = lcsRecursive(x, y, i-1, j, sub);
+        	return (j1.length() > i1.length())
+        				? j1
+        				: i1;
+        }
+	}
+	
+	public static String memoizedLCS(char[] x, char[] y, int i, int j, String sub, String[][] memo)
+	{
+
+		
+        if (i < 0 || j < 0)
+            return sub;
+        
+		if (i >= 0 && j >=0 && memo[i][j] != null)
+            return memo[i][j];
+
+        String result = null;
+        
+        if (i >= 0 && j >= 0 && x[i] == y[j])
+        {
+        	result = memoizedLCS(x, y, i-1, j-1, sub, memo) + x[i];
+        	//return memo[i][j];
+        }
+        else
+        {
+        	String j1 = memoizedLCS(x, y, i, j-1, sub, memo);
+        	String i1 = memoizedLCS(x, y, i-1, j, sub, memo);
+        	result = (j1.length() > i1.length())
+        					? j1
+        					: i1;
+        	//return memo[i][j];
+        }
+        memo[i][j] = result;
+        return result;
+	}
+	
+	
+	
 	public static void lcsLength(char[] x, char[] y)
 	{
 		int m = x.length + 1;
@@ -43,7 +92,7 @@ public class lcs {
 				}
 			}
 		}
-		printArray(c);
+		//printArray(c);
 		printArray(b);
 	}
 	
@@ -95,7 +144,7 @@ public class lcs {
 	{
 		if (i == -1 || j == -1)
 			return;
-		System.out.println("J: " + j + " I: " + i + "Position: " + b[i][j]);
+		//System.out.println("J: " + j + " I: " + i + "Position: " + b[i][j]);
 		if (b[i][j] == Position.UPDIAG)
 		{
 			printLCS(i - 1, j - 1);
