@@ -1,11 +1,14 @@
 
 public class lcs {
-	
+
+	//Dynamic Programming related variables
 	public static int[][] c;
 	public static Position[][] b;
-	private static char[] xholder;
+	public static char[] xholder;
 	private static char[] yholder;
+	public static String dynVal = "";
 	
+	//Recursive version of LCS
 	public static String lcsRecursive(char[] x, char[] y, int i, int j, String sub)
 	{
         if (i < 0 || j < 0)
@@ -23,10 +26,10 @@ public class lcs {
         }
 	}
 	
+	//Memoization version of LCS
 	public static String memoizedLCS(char[] x, char[] y, int i, int j, String sub, String[][] memo)
 	{
 
-		
         if (i < 0 || j < 0)
             return sub;
         
@@ -38,7 +41,6 @@ public class lcs {
         if (i >= 0 && j >= 0 && x[i] == y[j])
         {
         	result = memoizedLCS(x, y, i-1, j-1, sub, memo) + x[i];
-        	//return memo[i][j];
         }
         else
         {
@@ -47,16 +49,15 @@ public class lcs {
         	result = (j1.length() > i1.length())
         					? j1
         					: i1;
-        	//return memo[i][j];
         }
         memo[i][j] = result;
         return result;
 	}
 	
-	
-	
-	public static void lcsLength(char[] x, char[] y)
+	//Dynamic Programming version of LCS
+	public static String lcsLength(char[] x, char[] y)
 	{
+		dynVal = "";
 		int m = x.length + 1;
 		int n = y.length + 1;
 		
@@ -92,63 +93,20 @@ public class lcs {
 				}
 			}
 		}
-		//printArray(c);
-		printArray(b);
+		
+		printLCS(m-1,n-1);
+		return dynVal;
 	}
 	
-	private static void printArray(int[][] array)
-	{
-		System.out.print("    ");
-		for (int i = 0; i < xholder.length; i++)
-		{
-			System.out.print(xholder[i] + " ");
-		}
-		System.out.println();
-		for (int i = 0; i < array[0].length; i++)
-		{
-			if (i > 0)
-				System.out.print(yholder[i - 1] + " ");
-			else 
-				System.out.print("  ");
-			for (int j = 0; j < array.length; j++)
-			{
-				System.out.print(array[j][i] + " ");
-			}
-			System.out.println();
-		}
-	}
-	
-	private static void printArray(Position[][] array)
-	{
-		System.out.print("\t");
-		for (int i = 0; i < xholder.length; i++)
-		{
-			System.out.print(xholder[i] + "\t");
-		}
-		System.out.println();
-		for (int i = 0; i < array[0].length; i++)
-		{
-			if (i > 0)
-				System.out.print(yholder[i - 1] + " ");
-			else 
-				System.out.print("  ");
-			for (int j = 0; j < array.length; j++)
-			{
-				System.out.print(array[j][i] + "\t");
-			}
-			System.out.println();
-		}
-	}
-	
+	//Helper method for dynamic programming to print solution
 	public static void printLCS(int i, int j)
 	{
 		if (i == -1 || j == -1)
 			return;
-		//System.out.println("J: " + j + " I: " + i + "Position: " + b[i][j]);
 		if (b[i][j] == Position.UPDIAG)
 		{
 			printLCS(i - 1, j - 1);
-			System.out.print(xholder[i - 1]);
+			dynVal += xholder[i - 1];
 		}
 		else if (b[i][j] == Position.LEFT)
 			printLCS(i - 1, j);
